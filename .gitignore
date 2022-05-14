@@ -1,0 +1,7 @@
+.DS_Store
+.idea/
+debezium/*
+elasticsearch-data/*
+postgres-data/*
+target/
+*.iml

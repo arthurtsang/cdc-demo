@@ -1,0 +1,35 @@
+debezium:
+  name: engine
+  connector-class: io.debezium.connector.postgresql.PostgresConnector
+  tasks-max: 1
+  plugin-name: pgoutput
+  table-blacklist: public.sale,public.order_status
+  offset:
+    storage: org.apache.kafka.connect.storage.FileOffsetBackingStore
+    storage-file-path: /home/arthur/cdc/debezium/offsets.dat
+    flush-interval-ms: 60000
+  database:
+    dbname: postgres
+    hostname: localhost
+    port: 5432
+    user: postgres
+    password: postgres
+    history-class: io.debezium.relational.history.FileDatabaseHistory
+    history-file: /home/arthur/cdc/debezium/history.dat
+
+elasticsearch:
+  cluster-name: demo-cluster
+  host: localhost
+  ports:
+    - 9200
+    - 9300
+
+resilience4j-retry:
+  instances:
+    debezium:
+      maxAttempts: 50
+      waitDuration: 2s
+      enableExponentialBackoff: true
+      exponentialBackoffMultiplier: 2
+      retryExceptions:
+        - io.debezium.DebeziumException
